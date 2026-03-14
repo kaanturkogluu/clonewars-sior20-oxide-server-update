@@ -215,7 +215,9 @@ async fn main() {
         &game_server_arc,
     );
 
-    info!("Hello, world!");
+    info!("Server is running!");
+    info!("- UDP Gaming Server: {}:{}", server_options.bind_ip, server_options.udp_port);
+    info!("- Asset Server: http://{}:{}", server_options.bind_ip, server_options.https_port);
 
     for thread in threads {
         thread.join().expect("Thread exited with error");

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxide Server Launcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg: #0f0c29;
+            --glass: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+        }
+
+        .command-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            position: relative;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            word-break: break-all;
+            color: #ccc;
+        }
+
+        .btn-copy {
+            display: block;
+            width: 100%;
+            background: linear-gradient(to right, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-copy:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+
+        .btn-copy:active {
+            transform: scale(0.98);
+        }
+
+        .checklist {
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .checklist-item svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            color: #00ff88;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00ff88;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>OXIDE LAUNCHER</h1>
+    <p class="subtitle">Çok oyunculu bağlantı komutu oluşturucu</p>
+
+    <div class="input-group">
+        <label>Hamachi IP Adresi (Host)</label>
+        <input type="text" id="hostIp" placeholder="25.x.x.x" value="25.14.71.67">
+    </div>
+
+    <div class="input-group">
+        <label>Oyuncu Guid (ID)</label>
+        <input type="number" id="guid" placeholder="1 veya 2" value="2">
+    </div>
+
+    <label>Çalıştırma Komutu</label>
+    <div class="command-box">
+        <code id="commandText">CloneWars.exe inifile=ClientConfig.ini Guid=2 Server=25.14.71.67:20225 Ticket=p7w9dGPBPbbm9ZG Internationalization:Locale=8 LoadingScreenId=-1 Country=US key=9+SU7Z1u0rO/N1xW3vvZ4w== LiveGamer=1 CasSessionId=3jo7PGRQ9P4LiQF0</code>
+    </div>
+
+    <button class="btn-copy" onclick="copyCommand()">KOMUTU KOPYALA</button>
+
+    <div class="checklist">
+        <div class="checklist-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            manifest.crc dosyasını kontrol et (3015070931)
+        </div>
+        <div class="checklist-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            ClientConfig.ini yolunu doğrula
+        </div>
+        <div class="checklist-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Hamachi'de yeşil ışık yandığından emin ol
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">Kopyalandı!</div>
+
+<script>
+    const hostIpInput = document.getElementById('hostIp');
+    const guidInput = document.getElementById('guid');
+    const commandText = document.getElementById('commandText');
+    const toast = document.getElementById('toast');
+
+    function updateCommand() {
+        const ip = hostIpInput.value || 'YOUR_IP';
+        const guid = guidInput.value || '2';
+        const command = `CloneWars.exe inifile=ClientConfig.ini Guid=${guid} Server=${ip}:20225 Ticket=p7w9dGPBPbbm9ZG Internationalization:Locale=8 LoadingScreenId=-1 Country=US key=9+SU7Z1u0rO/N1xW3vvZ4w== LiveGamer=1 CasSessionId=3jo7PGRQ9P4LiQF0`;
+        commandText.innerText = command;
+    }
+
+    hostIpInput.addEventListener('input', updateCommand);
+    guidInput.addEventListener('input', updateCommand);
+
+    function copyCommand() {
+        navigator.clipboard.writeText(commandText.innerText).then(() => {
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
